@@ -194,5 +194,5 @@ def logout():
 
 if __name__ == '__main__':
     init_db()
-    port = int(os.getenv("PORT", 3306))
+    port = int(os.getenv("PORT", 3308))
     app.run(host='0.0.0.0', port=port)
