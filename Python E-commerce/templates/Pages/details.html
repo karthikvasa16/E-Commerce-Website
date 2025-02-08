@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            display: flex;
+            gap: 20px;
+        }
+        .product-image img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        .product-details {
+            flex: 1;
+        }
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .rating {
+            color: gold;
+            font-size: 18px;
+        }
+        .delivery-info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .reviews {
+            margin-top: 20px;
+        }
+        .review {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .buttons button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .buttons button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="product-image">
+        <img id="product-image" src="" alt="Product Image">
+    </div>
+    <div class="product-details">
+        <h2 id="product-name"></h2>
+        <p class="price" id="product-price"></p>
+        <p class="rating" id="product-rating"></p>
+        <p id="product-description"></p>
+        <div class="delivery-info">
+            <p><strong>Delivery Time:</strong> 3-5 Business Days</p>
+            <p><strong>Return Policy:</strong> 7-Day Replacement/Return Available</p>
+        </div>
+        <div class="buttons">
+            <button onclick="addToCart()">Add to Cart</button>
+            <button onclick="buyNow()">Buy Now</button>
+        </div>
+    </div>
+</div>
+
+<div class="reviews">
+    <h3>Customer Reviews</h3>
+    <div id="reviews-container"></div>
+</div>
+
+<script>
+    function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            name: params.get('name') || 'Unknown Product',
+            price: params.get('price') || '₹0',
+            image: params.get('image') || '',
+            rating: params.get('rating') || '★★★★☆ (4/5)',
+            description: params.get('description') || 'No description available.',
+            reviews: JSON.parse(params.get('reviews') || '[]')
+        };
+    }
+
+    function populateProductDetails() {
+        const product = getQueryParams();
+        document.getElementById('product-image').src = product.image;
+        document.getElementById('product-name').textContent = product.name;
+        document.getElementById('product-price').textContent = product.price;
+        document.getElementById('product-rating').textContent = product.rating;
+        document.getElementById('product-description').textContent = product.description;
+
+        const reviewsContainer = document.getElementById('reviews-container');
+        reviewsContainer.innerHTML = '';
+        product.reviews.forEach(review => {
+            const reviewElement = document.createElement('div');
+            reviewElement.classList.add('review');
+            reviewElement.innerHTML = `<p><strong>${review.name}:</strong> ${review.rating}</p><p>${review.comment}</p>`;
+            reviewsContainer.appendChild(reviewElement);
+        });
+    }
+
+    function addToCart() {
+        alert("1 item has been added to the cart!");
+    }
+
+    function buyNow() {
+        alert("Buy option is not available right now.");
+    }
+
+    document.addEventListener('DOMContentLoaded', populateProductDetails);
+</script>
+
+</body>
+</html>

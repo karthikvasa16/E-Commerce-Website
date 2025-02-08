@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clothes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .messages-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            max-width: 300px;
+            z-index: 1000;
+        }
+        .message {
+            background-color: #28a745;
+            color: #fff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease-out;
+        }
+        .message button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .message button:hover {
+            color: #ffdddd;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .categories {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .categories button {
+            background: none;
+            border: 1px solid #333;
+            margin: 0 10px;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .categories button:hover {
+            background-color: #333;
+            color: #fff;
+        }
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            width: 200px;
+            text-align: center;
+            height: auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .product-card img {
+            max-width: 100%;
+            height: 50%;
+            margin-bottom: 10px;
+        }
+        .product-card button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        .product-card button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="messages-container" id="messages-container"></div>
+
+<div class="categories">
+    <button onclick="filterCategory('all')">All</button>
+    <button onclick="filterCategory('mens')">Men's</button>
+    <button onclick="filterCategory('womens')">Women's</button>
+</div>
+
+<div class="products" id="product-list">
+    <div class="product-card" data-category="mens">
+        <img src="/static/images/shirtM-1.jpg" alt="Men's Shirt">
+        <h4>Men's Shirt</h4>
+        <p>₹500</p>
+        <button onclick="addToCart('Men\'s Shirt', 500, '/static/images/shirtM-1.jpg')">Add to Cart</button>
+        <button onclick="buyNow()">Buy Now</button>
+</div>
+    <div class="product-card" data-category="womens">
+        <img src="/static/images/womens-1.jpg" alt="Women's Dress">
+        <h4>Women's Dress</h4>
+        <p>₹450</p>
+        <button onclick="addToCart('Womens\'s Dress', 450, '/static/images/womens-1.jpg')">Add to Cart</button>
+        <button onclick="buyNow()">Buy Now</button>
+    </div>
+    <div class="product-card" data-category="mens">
+        <img src="/static/images/shirtM-1.jpg" alt="shirt-1">
+        <h4>Men's Shirt</h4>
+        <p>₹500</p>
+        <button onclick="addToCart('Men\'s Shirt', 500, '/static/images/shirtM-1.jpg')">Add to Cart</button>
+        <button onclick="buyNow()">Buy Now</button>
+    </div>
+    <div class="product-card" data-category="womens">
+        <img src="/static/images/womens-1.jpg" alt="Women's Dress">
+        <h4>Women's Dress</h4>
+        <p>₹450</p>
+        <button onclick="addToCart('Womens\'s Dress', 450, '/static/images/womens-1.jpg')">Add to Cart</button>
+        <button onclick="buyNow()">Buy Now</button>
+    </div>
+</div>
+
+<script>
+    function filterCategory(category) {
+    const products = document.querySelectorAll('.product-card');
+    products.forEach(product => {
+        product.style.display = category === 'all' || product.dataset.category === category ? 'block' : 'none';
+    });
+}
+
+function buyNow(itemName) {
+    createMessage(`Buy option not avalibale right now .`);
+}
+function createMessage(messageText) {
+    const container = document.getElementById('messages-container');
+    const message = document.createElement('div');
+    message.className = 'message';
+    
+   
+    const text = document.createElement('span');
+    text.textContent = messageText;
+
+    
+    const dismissButton = document.createElement('button');
+    dismissButton.textContent = 'X';
+    dismissButton.onclick = () => container.removeChild(message);
+
+
+    message.appendChild(text);
+    message.appendChild(dismissButton);
+    container.appendChild(message);
+
+
+    setTimeout(() => {
+        if (container.contains(message)) {
+            container.removeChild(message);
+        }
+    }, 5000);
+}
+function addToCart(productName, price, imageUrl) {
+    createMessage(`1 item has been added to the cart!`);
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/add_to_cart';
+
+    const nameInput = document.createElement('input');
+    nameInput.type = 'hidden';
+    nameInput.name = 'product_name';
+    nameInput.value = productName;
+    form.appendChild(nameInput);
+
+    const priceInput = document.createElement('input');
+    priceInput.type = 'hidden';
+    priceInput.name = 'price';
+    priceInput.value = price;
+    form.appendChild(priceInput);
+
+    const imageInput = document.createElement('input');
+    imageInput.type = 'hidden';
+    imageInput.name = 'image';
+    imageInput.value = imageUrl;
+    form.appendChild(imageInput);
+
+    document.body.appendChild(form);
+    form.submit();
+}    
+</script>
+
+</body>
+</html>
